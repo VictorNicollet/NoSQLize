@@ -1,6 +1,7 @@
 (* NoSQLize - a public domain NoSQL storage and computation engine. *)
 
 open Lwt
+open Driver_register
 
 let server_driver_name = "in-memory"
 let server_driver = 
