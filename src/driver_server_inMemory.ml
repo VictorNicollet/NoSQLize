@@ -6,8 +6,6 @@ type database = unit
 
 let databases = Hashtbl.create 100
 
-let name = "in-memory"
-
 let all_databases     () =
   return (Hashtbl.fold (fun k _ l -> k :: l) databases [])
 

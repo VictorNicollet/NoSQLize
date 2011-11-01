@@ -7,10 +7,6 @@
 (** The server driver interface. *)
 module type DEFINITION = sig
 
-  (** The (unique) name of the driver. Used when selecting a driver from
-      several available drivers. *)
-  val name : string
-
   (** The type of a database. *)
   type database 
 
@@ -30,7 +26,6 @@ end
 (** A server driver class. Encapsulates all the details concerning a
     the underlying database driver module. *)
 class type driver = object
-  method name : string
   method database_exists : string -> bool Lwt.t
   method put_database : string -> unit Lwt.t
   method all_databases : string list Lwt.t
@@ -43,5 +38,3 @@ module Register : functor (D:DEFINITION) -> sig
   val driver : driver
 end
 
-(** Get a server driver by name. Returns [None] if it does not exist. *)
-val get_driver : string -> driver option
