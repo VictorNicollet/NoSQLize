@@ -59,6 +59,9 @@ let database_count () =
 let node_metadata node = 
   return (node.metadata)
 
+let all_nodes database = 
+  return (N_Id_Map.fold (fun k _ l -> k :: l) (Lock.get database.nodes) [])
+
 let get_node database nid = 
   let open N_Id_Table.Sugar in
       return (database.nodes.[nid])

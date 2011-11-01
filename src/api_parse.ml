@@ -24,7 +24,7 @@ let dispatch_db db ~args ~more =
     | _       -> error "Unsupported HTTP method"
 
 let dispatch_db_all db ~args ~more = 
-  error "Not implemented"
+  get_only more Core.all_nodes db
 
 let dispatch_db_node db no ~args ~more = 
   match more with 

@@ -13,6 +13,7 @@ module type DEFINITION = sig
   val delete_database : d_id -> unit Lwt.t
   val node_count : database -> int Lwt.t
   val database_count : unit -> int Lwt.t
+  val all_nodes : database -> n_id list Lwt.t
   val get_node : database -> n_id -> node option Lwt.t
   val put_node : database -> n_id -> node_metadata -> unit Lwt.t
   val delete_node : database -> n_id -> unit Lwt.t
@@ -25,6 +26,7 @@ class type driver = object
   method all_databases : d_id list Lwt.t
   method delete_database : d_id -> unit Lwt.t 
   method database_count : int Lwt.t
+  method all_nodes : d_id -> (n_id list,[`NoDatabase]) BatStd.result Lwt.t
   method delete_node : d_id -> n_id -> (unit,[`NoDatabase]) BatStd.result Lwt.t 
   method get_node : d_id -> n_id -> (node_metadata,[`NoDatabase|`NoNode]) BatStd.result Lwt.t
   method put_node : d_id -> n_id -> node_metadata -> (unit,[`NoDatabase]) BatStd.result Lwt.t
@@ -42,6 +44,9 @@ module Register = functor(D:DEFINITION) -> struct
     method all_databases      = D.all_databases ()
     method delete_database db = D.delete_database db 
     method database_count     = D.database_count ()
+    method all_nodes       db = D.get_database db >>= (function
+      | None    -> return (Bad `NoDatabase)
+      | Some db -> D.all_nodes db >>= fun l -> return (Ok l))
     method get_node     db no = D.get_database db >>= (function
       | None    -> return (Bad `NoDatabase)
       | Some db -> D.get_node db no >>= (function

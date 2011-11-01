@@ -50,6 +50,15 @@ let delete_database db =
   server_driver # delete_database db >>= fun () ->
   return (200, `Object [ "ok", `Bool true ])
 
+let all_nodes db = 
+  let db = database_id db in
+  server_driver # all_nodes db >>= function
+    | Bad what -> bad_error what
+    | Ok all   -> let all = (all :> string list) in
+		  return (200, `Object [
+		    "nodes", `Array (List.map (fun s -> `String s) all)
+		  ])
+
 let get_node db no = 
   let db = database_id db and no = node_id no in
   server_driver # get_node db no >>= function
