@@ -43,39 +43,22 @@ let dispatch req =
 	~headers:["Content-Type","application/json"]
 	outchan)
 
-let source_to_worker = Event.new_channel ()
+(* All the relevant work, except for sending out the response, should happen
+   in the pre-emptive Lwt worker thread. *)
+let callback req outchan = 
+  (Kernel.delegate dispatch req) outchan 
 
-let enqueue req outcome =
-  let worker_to_source = Event.new_channel () in
-  let back res = Event.sync (Event.send worker_to_source res) in
-  let ()       = Event.sync (Event.send source_to_worker (req,back)) in
-  let res      = Event.sync (Event.receive worker_to_source) in
-  res outcome 
- 
-let rec loop () = 
-  let worker =
-    (* Try to dequeue a pending event if available, and return a worker
-       thread to process it. *)
-    match
-      Event.poll (Event.receive source_to_worker)
-    with 
-      | Some (req,back) -> dispatch req >>= fun res -> return (back res)
-      | None -> return ()
-  in
-  worker <&> ( Lwt_unix.yield () >>= loop ) 
-    
 let port = 7456
   
 let spec =
   Http_types.({
     Http_daemon.default_spec with
-      callback = enqueue ;
+      callback ;
       mode     = `Thread ;
       timeout  = None ;
       port     ;
   })
     
 let _ = 
-  let _ = Thread.create Lwt_main.run (loop ()) in
   Http_daemon.main spec  
   
