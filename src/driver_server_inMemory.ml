@@ -48,3 +48,5 @@ let delete_database name =
   let open D_Id_Table.Sugar in
       return (databases.[name] <- None)
     
+let node_count database = 
+  N_Id_Map.cardinal (Lock.get database.nodes)

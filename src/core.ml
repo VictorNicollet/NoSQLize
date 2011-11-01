@@ -2,9 +2,13 @@
 
 open Lwt
 open Driver_types
+open BatPervasives
 
 let error status text = 
   return (status, `Object [ "error", `String text ])
+
+let bad_error = function
+  | `NoDatabase -> error 404 "No such database"
 
 let version = "0.1"
 
@@ -27,9 +31,11 @@ let all_databases () =
 
 let get_database db = 
   let db = database_id db in 
-  server_driver # database_exists db >>= fun exists ->
-  if exists then return (200, `Object [])
-  else error 404 "No such database"
+  server_driver # database_node_count db >>= function
+    | Bad what -> bad_error what 
+    | Ok count -> return (200, `Object [ 
+    "nodes", `Int count
+    ])
 
 let put_database db = 
   let db = database_id db in

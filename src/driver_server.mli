@@ -23,12 +23,16 @@ module type DEFINITION = sig
 
   (** Delete all the information ABOUT a database. *)
   val delete_database : d_id -> unit Lwt.t
+
+  (** Count the nodes in a database. *)
+  val node_count : database -> int
+
 end
 
 (** A server driver class. Encapsulates all the details concerning a
     the underlying database driver module. *)
 class type driver = object
-  method database_exists : d_id -> bool Lwt.t
+  method database_node_count : d_id -> (int,[`NoDatabase]) BatStd.result Lwt.t
   method put_database : d_id -> unit Lwt.t
   method all_databases : d_id list Lwt.t
   method delete_database : d_id -> unit Lwt.t
