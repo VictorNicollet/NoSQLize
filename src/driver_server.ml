@@ -1,20 +1,21 @@
 (* NoSQLize - a public domain NoSQL storage and computation engine. *)
 
 open Lwt
+open Driver_types
 
 module type DEFINITION = sig
   type database 
-  val get_database : string -> database option Lwt.t
-  val put_database : string -> database Lwt.t
-  val all_databases : unit -> string list Lwt.t
-  val delete_database : string -> unit Lwt.t
+  val get_database : d_id -> database option Lwt.t
+  val put_database : d_id -> database Lwt.t
+  val all_databases : unit -> d_id list Lwt.t
+  val delete_database : d_id -> unit Lwt.t
 end
 
 class type driver = object
-  method database_exists : string -> bool Lwt.t
-  method put_database : string -> unit Lwt.t
-  method all_databases : string list Lwt.t
-  method delete_database : string -> unit Lwt.t 
+  method database_exists : d_id -> bool Lwt.t
+  method put_database : d_id -> unit Lwt.t
+  method all_databases : d_id list Lwt.t
+  method delete_database : d_id -> unit Lwt.t 
 end
 
 (* This implements the server_driver interface based on the provided 

@@ -1,6 +1,7 @@
 (* NoSQLize - a public domain NoSQL storage and computation engine. *)
 
 open Lwt
+open Driver_types
 
 let error status text = 
   return (status, `Object [ "error", `String text ])
@@ -15,21 +16,25 @@ let status () =
   ])
 
 let all_databases () = 
-  server_driver # all_databases >>= fun all -> 
+  server_driver # all_databases >>= fun all ->
+  let all = (all :> string list) in
   return (200, `Object [
     "databases", `Array (List.map (fun s -> `String s) all)
   ])
 
 let get_database db = 
+  let db = database_id db in 
   server_driver # database_exists db >>= fun exists ->
   if exists then return (200, `Object [])
   else error 404 "No such database"
 
 let put_database db = 
+  let db = database_id db in
   server_driver # put_database db >>= fun () ->
   return (200, `Object [ "ok", `Bool true ])
 
 let delete_database db = 
+  let db = database_id db in
   server_driver # delete_database db >>= fun () ->
   return (200, `Object [ "ok", `Bool true ])
 
