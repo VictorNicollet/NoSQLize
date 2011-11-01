@@ -20,7 +20,9 @@ end)
 
 module N_Id_Table = Lock.MapLock(N_Id_Map)
 
-type node = unit
+type node = {
+  metadata : node_metadata
+}
 
 type database = {
   nodes : node N_Id_Table.t 
@@ -49,7 +51,23 @@ let delete_database name =
       return (databases.[name] <- None)
     
 let node_count database = 
-  N_Id_Map.cardinal (Lock.get database.nodes)
+  return (N_Id_Map.cardinal (Lock.get database.nodes))
 
 let database_count () = 
   return (D_Id_Map.cardinal (Lock.get databases))
+
+let node_metadata node = 
+  return (node.metadata)
+
+let get_node database nid = 
+  let open N_Id_Table.Sugar in
+      return (database.nodes.[nid])
+
+let put_node database nid metadata = 
+  let fresh = { metadata } in
+  let open N_Id_Table.Sugar in
+      return (database.nodes.[nid] <- Some fresh)
+
+let delete_node database nid = 
+  let open N_Id_Table.Sugar in
+      return (database.nodes.[nid] <- None)
