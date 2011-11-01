@@ -3,6 +3,9 @@
 open Lwt
 open Driver_register
 
+let error status text = 
+  return (status, `Object [ "error", `String text ])
+
 let server_driver_name = "in-memory"
 let server_driver = 
   match Driver.get_server_driver server_driver_name with
@@ -14,5 +17,20 @@ let status () =
     "status" , `String "running" ;
     "workers", `Int (Kernel.workers ())
   ])
+
+let all_databases () = 
+  server_driver # all_databases >>= fun all -> 
+  return (200, `Object [
+    "databases", `Array (List.map (fun s -> `String s) all)
+  ])
+
+let get_database db = 
+  server_driver # database_exists db >>= fun exists ->
+  if exists then return (200, `Object [])
+  else error 404 "No such database"
+
+let put_database db = 
+  server_driver # put_database db >>= fun () ->
+  return (200, `Object [ "ok", `Bool true ])
 
 

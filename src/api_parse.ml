@@ -5,16 +5,22 @@ open Lwt
 let error text = 
   return (500, `Object [ "error", `String text ])
 
-let dispatch_root ~args ~more = 
+let get_only more f a = 
   match more with 
-    | `GET -> Core.status ()
+    | `GET -> f a
     | _    -> error "Unsupported HTTP method"
 
+let dispatch_root ~args ~more = 
+  get_only more Core.status ()
+
 let dispatch_all ~args ~more = 
-  error "Not implemented"
+  get_only more Core.all_databases ()
 
 let dispatch_db db ~args ~more = 
-  error "Not implemented"
+  match more with 
+    | `GET   -> Core.get_database db
+    | `PUT _ -> Core.put_database db
+    | _      -> error "Unsupported HTTP method"
 
 let dispatch_db_all db ~args ~more = 
   error "Not implemented"
