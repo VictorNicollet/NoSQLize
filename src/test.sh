@@ -1,0 +1,10 @@
+#!/bin/sh
+curl http://localhost:7456/ && echo ''
+curl http://localhost:7456/_all && echo ''
+curl http://localhost:7456/foo && echo ''
+curl -X POST http://localhost:7456/foo -d 'method=PUT' && echo ''
+curl http://localhost:7456/foo && echo ''
+curl http://localhost:7456/_all && echo ''
+curl -X POST http://localhost:7456/foo -d 'method=DELETE' && echo ''
+curl http://localhost:7456/foo && echo ''
+curl http://localhost:7456/_all && echo ''
