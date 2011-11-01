@@ -50,3 +50,6 @@ let delete_database name =
     
 let node_count database = 
   N_Id_Map.cardinal (Lock.get database.nodes)
+
+let database_count () = 
+  return (D_Id_Map.cardinal (Lock.get databases))

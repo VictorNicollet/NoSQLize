@@ -27,15 +27,19 @@ module type DEFINITION = sig
   (** Count the nodes in a database. *)
   val node_count : database -> int
 
+  (** Count the databases on this server. *)
+  val database_count : unit -> int Lwt.t
+    
 end
 
 (** A server driver class. Encapsulates all the details concerning a
     the underlying database driver module. *)
 class type driver = object
-  method database_node_count : d_id -> (int,[`NoDatabase]) BatStd.result Lwt.t
+  method node_count : d_id -> (int,[`NoDatabase]) BatStd.result Lwt.t
   method put_database : d_id -> unit Lwt.t
   method all_databases : d_id list Lwt.t
   method delete_database : d_id -> unit Lwt.t
+  method database_count : int Lwt.t
 end
 
 (** Register a server driver. This makes it available for instantiation
