@@ -14,17 +14,14 @@ let with_worker task =
   task () >>= fun () -> return (decr worker_count)
 
 (* This loop is executed by the Lwt worker, it polls the incoming task channel
-   for tasks and runs them. *)
+   for tasks and runs them. The loop structure is designed so that all the 
+   pending events are extracted in one go and joined together with <&> before
+   their execution starts. *)
 let rec loop () = 
-  let worker =
-    match Event.poll (Event.receive channel) with 
-      | Some act -> with_worker act 
-      | None     -> return ()
-  in
-  (* This is a join: we wait for all tasks to be finished (including the
-     infinite task-polling task) before stopping. *)
-  worker <&> ( Lwt_unix.yield () >>= loop ) 
-
+  Thread.yield () ;
+  match Event.poll (Event.receive channel) with 
+    | Some act -> with_worker act <&> loop ()
+    | None     -> Lwt_unix.yield () >>= loop  
 
 let _ = Thread.create Lwt_main.run (loop ())
 
