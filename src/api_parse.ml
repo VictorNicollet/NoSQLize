@@ -27,7 +27,11 @@ let dispatch_db_all db ~args ~more =
   error "Not implemented"
 
 let dispatch_db_node db no ~args ~more = 
-  error "Not implemented"
+  match more with 
+    | `GET     -> Core.get_node db no
+    | `PUT put -> Core.put_node db no put
+    | `DELETE  -> Core.delete_node db no
+    | _        -> error "Not implemented" 
  
 let dispatch_db_node_id db no id ~args ~more = 
   error "Not implemented"

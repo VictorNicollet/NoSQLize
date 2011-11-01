@@ -9,6 +9,7 @@ let error status text =
 
 let bad_error = function
   | `NoDatabase -> error 404 "No such database"
+  | `NoNode     -> error 404 "No such node in this database"
 
 let version = "0.1"
 
@@ -49,4 +50,21 @@ let delete_database db =
   server_driver # delete_database db >>= fun () ->
   return (200, `Object [ "ok", `Bool true ])
 
+let get_node db no = 
+  let db = database_id db and no = node_id no in
+  server_driver # get_node db no >>= function
+    | Bad what -> bad_error what 
+    | Ok  meta -> return (200, `Object [])
 
+let put_node db no json = 
+  let db = database_id db and no = node_id no in
+  let meta = { node_key_type = [ `String ] } in
+  server_driver # put_node db no meta >>= function
+    | Bad what -> bad_error what
+    | Ok  ()   -> return (200, `Object [ "ok", `Bool true ])
+
+let delete_node db no = 
+  let db = database_id db and no = node_id no in
+  server_driver # delete_node db no >>= function
+    | Bad what -> bad_error what 
+    | Ok  ()   -> return (200, `Object [ "ok", `Bool true ])

@@ -17,3 +17,12 @@ val put_database : string -> (int * Json.t) Lwt.t
 
 (** Deletes a database. *)
 val delete_database : string -> (int * Json.t) Lwt.t
+
+(** Get the properties of a node. *)
+val get_node : string -> string -> (int * Json.t) Lwt.t
+
+(** Create or update a node. *)
+val put_node : string -> string -> Json.t -> (int * Json.t) Lwt.t
+
+(** Delete a node. *)
+val delete_node : string -> string -> (int * Json.t) Lwt.t
