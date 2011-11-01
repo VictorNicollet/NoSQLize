@@ -6,7 +6,7 @@ open Driver_types
 module type DEFINITION = sig
   type database 
   val get_database : d_id -> database option Lwt.t
-  val put_database : d_id -> database Lwt.t
+  val put_database : d_id -> unit Lwt.t
   val all_databases : unit -> d_id list Lwt.t
   val delete_database : d_id -> unit Lwt.t
 end

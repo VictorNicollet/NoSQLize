@@ -16,7 +16,7 @@ module type DEFINITION = sig
   val get_database : d_id -> database option Lwt.t
 
   (** Put (create if not exists) a database by name. *)
-  val put_database : d_id -> database Lwt.t
+  val put_database : d_id -> unit Lwt.t
 
   (** Get the names of all available databases. *)
   val all_databases : unit -> d_id list Lwt.t
