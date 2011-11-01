@@ -38,3 +38,5 @@ module Register : functor (D:DEFINITION) -> sig
   val driver : driver
 end
 
+(** All available driver types *)
+type t = [ `InMemory ]

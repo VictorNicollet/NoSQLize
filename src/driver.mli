@@ -6,6 +6,6 @@
 module Server : sig
 
   (** Get a driver using an identifier. *)
-  val get : [ `InMemory ] -> Driver_server.driver
+  val get : Driver_server.t -> Driver_server.driver
 
 end

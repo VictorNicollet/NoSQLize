@@ -17,7 +17,6 @@ class type driver = object
   method delete_database : string -> unit Lwt.t 
 end
 
-
 (* This implements the server_driver interface based on the provided 
    driver description module, and registers it. *)
 module Register = functor(D:DEFINITION) -> struct
@@ -32,3 +31,5 @@ module Register = functor(D:DEFINITION) -> struct
   let driver = (driver_impl :> driver)
 
 end
+
+type t = [ `InMemory ]
