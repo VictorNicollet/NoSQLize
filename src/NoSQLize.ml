@@ -50,7 +50,7 @@ let spec =
   Http_types.({
     Http_daemon.default_spec with
       callback ;
-      mode     = `Single ;
+      mode     = `Thread ;
       timeout  = Some 10 ;
       port     ;
   })
