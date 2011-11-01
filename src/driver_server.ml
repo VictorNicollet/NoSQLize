@@ -2,7 +2,7 @@
 
 open Lwt
 
-module type SERVER_DRIVER = sig
+module type DEFINITION = sig
   val name : string
   type database 
   val get_database : string -> database option Lwt.t
@@ -11,7 +11,7 @@ module type SERVER_DRIVER = sig
   val delete_database : string -> unit Lwt.t
 end
 
-class type server_driver = object
+class type driver = object
   method name : string
   method database_exists : string -> bool Lwt.t
   method put_database : string -> unit Lwt.t
@@ -20,14 +20,14 @@ class type server_driver = object
 end
 
 (* This is the list of all available server drivers. *)
-let server_drivers = Hashtbl.create 10
+let drivers = Hashtbl.create 10
 
-let get_server_driver name = 
-  try Some (Hashtbl.find server_drivers name) with Not_found -> None 
+let get_driver name = 
+  try Some (Hashtbl.find drivers name) with Not_found -> None 
 
 (* This implements the server_driver interface based on the provided 
    driver description module, and registers it. *)
-module RegisterServerDriver = functor(D:SERVER_DRIVER) -> struct
+module Register = functor(D:DEFINITION) -> struct
   
   let driver_impl = object
     method name = D.name
@@ -37,8 +37,8 @@ module RegisterServerDriver = functor(D:SERVER_DRIVER) -> struct
     method delete_database db = D.delete_database db 
   end
     
-  let driver = (driver_impl :> server_driver)
+  let driver = (driver_impl :> driver)
   
-  let _ = Hashtbl.add server_drivers D.name driver
+  let _ = Hashtbl.add drivers D.name driver
 
 end

@@ -8,7 +8,7 @@ let error status text =
 
 let server_driver_name = "in-memory"
 let server_driver = 
-  match Driver.get_server_driver server_driver_name with
+  match Driver_server.get_driver server_driver_name with
     | Some driver -> driver
     | None -> assert false
  
