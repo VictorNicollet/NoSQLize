@@ -6,7 +6,9 @@ let error text =
   return (500, `Object [ "error", `String text ])
 
 let dispatch_root ~args ~more = 
-  error "Not implemented"
+  match more with 
+    | `GET -> Core.status ()
+    | _    -> error "Unsupported HTTP method"
 
 let dispatch_all ~args ~more = 
   error "Not implemented"

@@ -2,3 +2,7 @@
 
 open Lwt
 
+let status () = 
+  return (200, `Object [ "status", `String "running" ])
+
+
