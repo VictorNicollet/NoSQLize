@@ -2,7 +2,7 @@
 
 open Lwt
 
-let callback req outchan =
+let dispatch req =
 
   let assoc_to_json list = 
     (* We are actually hacking around the HTTP library's inability to handle
@@ -33,27 +33,49 @@ let callback req outchan =
   in
     
   (* Use the result to respond to the request *)
-  ignore begin
-    result >>= fun (status,json) ->
+  result >>= fun (status,json) ->
+  
+  return 
+    (fun outchan -> 
+      Http_daemon.respond 
+	~code:(`Code status)
+	~body:(Json.string_of_json json)
+	~headers:["Content-Type","application/json"]
+	outchan)
 
-    return 
-      (Http_daemon.respond 
-	 ~code:(`Code status)
-	 ~body:(Json.string_of_json json)
-	 ~headers:["Content-Type","application/json"]
-	 outchan)
-  end
+let source_to_worker = Event.new_channel ()
 
+let enqueue req outcome =
+  let worker_to_source = Event.new_channel () in
+  let back res = Event.sync (Event.send worker_to_source res) in
+  let ()       = Event.sync (Event.send source_to_worker (req,back)) in
+  let res      = Event.sync (Event.receive worker_to_source) in
+  res outcome 
+ 
+let rec loop () = 
+  let worker =
+    (* Try to dequeue a pending event if available, and return a worker
+       thread to process it. *)
+    match
+      Event.poll (Event.receive source_to_worker)
+    with 
+      | Some (req,back) -> dispatch req >>= fun res -> return (back res)
+      | None -> return ()
+  in
+  worker <&> ( Lwt_unix.yield () >>= loop ) 
+    
 let port = 7456
-
+  
 let spec =
   Http_types.({
     Http_daemon.default_spec with
-      callback ;
+      callback = enqueue ;
       mode     = `Thread ;
-      timeout  = Some 10 ;
+      timeout  = None ;
       port     ;
   })
     
-let _ = Http_daemon.main spec
+let _ = 
+  let _ = Thread.create Lwt_main.run (loop ()) in
+  Http_daemon.main spec  
   
