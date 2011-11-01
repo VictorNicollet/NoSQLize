@@ -6,11 +6,14 @@ open Driver_types
 let error status text = 
   return (status, `Object [ "error", `String text ])
 
+let version = "0.1"
+
 let server_driver_name = `InMemory
 let server_driver = Driver.Server.get server_driver_name
  
 let status () = 
   return (200, `Object [
+    "version", `String version ;
     "status" , `String "running" ;
     "workers", `Int (Kernel.workers ())
   ])
