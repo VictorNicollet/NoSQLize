@@ -18,9 +18,10 @@ let dispatch_all ~args ~more =
 
 let dispatch_db db ~args ~more = 
   match more with 
-    | `GET   -> Core.get_database db
-    | `PUT _ -> Core.put_database db
-    | _      -> error "Unsupported HTTP method"
+    | `GET    -> Core.get_database db
+    | `PUT _  -> Core.put_database db
+    | `DELETE -> Core.delete_database db
+    | _       -> error "Unsupported HTTP method"
 
 let dispatch_db_all db ~args ~more = 
   error "Not implemented"

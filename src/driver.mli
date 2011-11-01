@@ -31,6 +31,8 @@ module type SERVER_DRIVER = sig
   (** Get the names of all available databases. *)
   val all_databases : unit -> string list Lwt.t
 
+  (** Delete all the information ABOUT a database. *)
+  val delete_database : string -> unit Lwt.t
 end
 
 (** A server driver class. Encapsulates all the details concerning a
@@ -40,6 +42,7 @@ class type server_driver = object
   method database_exists : string -> bool Lwt.t
   method put_database : string -> unit Lwt.t
   method all_databases : string list Lwt.t
+  method delete_database : string -> unit Lwt.t
 end
 
 (** Register a server driver. This makes it available for instantiation

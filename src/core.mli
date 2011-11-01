@@ -15,4 +15,5 @@ val get_database : string -> (int * Json.t) Lwt.t
 (** Creates a database if it does not already exist. *)
 val put_database : string -> (int * Json.t) Lwt.t
 
-
+(** Deletes a database. *)
+val delete_database : string -> (int * Json.t) Lwt.t

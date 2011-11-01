@@ -33,4 +33,8 @@ let put_database db =
   server_driver # put_database db >>= fun () ->
   return (200, `Object [ "ok", `Bool true ])
 
+let delete_database db = 
+  server_driver # delete_database db >>= fun () ->
+  return (200, `Object [ "ok", `Bool true ])
+
 
