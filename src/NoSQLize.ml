@@ -44,12 +44,15 @@ let callback req outchan =
 	 outchan)
   end
 
+let port = 7456
+
 let spec =
   Http_types.({
     Http_daemon.default_spec with
       callback ;
-      timeout  = Some 10;
-      port     = 7456;
+      mode     = `Single ;
+      timeout  = Some 10 ;
+      port     ;
   })
     
 let _ = Http_daemon.main spec
