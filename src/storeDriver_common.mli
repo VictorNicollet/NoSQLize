@@ -8,5 +8,6 @@ open Driver_types
 (** The store driver interface. *)
 module type DEFINITION = sig
   type id
+  val fresh : unit -> id Lwt.t
 end
 

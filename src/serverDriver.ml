@@ -5,6 +5,8 @@ open BatPervasives
 open ServerDriver_common
 open Driver_types  
 
+open StoreDriver
+
 class type driver = object
   method node_count : d_id -> (int,[`NoDatabase]) BatStd.result Lwt.t
   method put_database : d_id -> unit Lwt.t

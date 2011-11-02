@@ -4,5 +4,6 @@ open Driver_types
 
 module type DEFINITION = sig
   type id 
+  val fresh : unit -> id Lwt.t
 end
 
