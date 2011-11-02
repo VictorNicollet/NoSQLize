@@ -2,6 +2,6 @@
 
 open Lwt
 
-type id = unit
+type id = string
 
-let fresh () = return ()
+let fresh () = return (Util.fresh ())
