@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 curl http://localhost:7456/ && echo ''
 curl http://localhost:7456/_all && echo ''
 curl http://localhost:7456/foo && echo ''
