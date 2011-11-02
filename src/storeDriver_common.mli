@@ -23,5 +23,8 @@ module type DEFINITION = sig
   (** Gets the current binding for the provided identifier. *)
   val get : id -> string -> Json.t option Lwt.t
 
+  (** Get all the changes since a certain change (included) *)
+  val changes : id -> c_id option -> (c_id * string) list Lwt.t
+
 end
 

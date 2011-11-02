@@ -12,6 +12,7 @@ type id = [ `InMemory of StoreDriver_inMemory.id ]
 class type driver = object
   method get : string -> Json.t option Lwt.t
   method put : string -> Json.t option -> unit Lwt.t
+  method changes : c_id option -> (c_id * string) list Lwt.t
 end
 
 (** Get a fresh identifier in a given domain *)

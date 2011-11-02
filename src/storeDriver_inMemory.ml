@@ -2,10 +2,9 @@
 
 open Lwt
 open BatPervasives
+open Driver_types
 
 type id = string
-
-open DualMap
 
 (* Storing all available tables ----------------------------------- *)
 
@@ -14,11 +13,16 @@ module StringT = struct
   let compare = compare
 end
 
+module ChangeT = struct
+  type t = c_id
+  let compare = compare
+end
+
 module StringMap = Map.Make(StringT)
 
 module StringTable = Lock.MapLock(StringMap)
 
-module ChangesMap = DualMap.Make(StringT)(StringT)
+module ChangesMap = DualMap.Make(ChangeT)(StringT)
 
 type table = {
   data : Json.t StringTable.t ;
@@ -33,7 +37,7 @@ let make_table () = {
 }
 
 let tag_change table id = 
-  let cid = Util.fresh () in
+  let cid = change_id (Util.fresh ()) in
   Lock.update (fun c -> ChangesMap.add c cid id) table.changes
 
 (* Implementing the interface ------------------------------------- *)
@@ -70,3 +74,8 @@ let set tid id json =
 let put tid id = function
   | None      -> delete tid id
   | Some json -> set    tid id json
+
+let changes tid cidopt = 
+  let open StringTable.Sugar in 
+      match tables.[tid] with None -> return [] | Some table -> 
+	return (ChangesMap.traverse_a (Lock.get table.changes) cidopt None)
