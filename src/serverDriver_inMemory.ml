@@ -21,7 +21,8 @@ end)
 module N_Id_Table = Lock.MapLock(N_Id_Map)
 
 type node = {
-  metadata : node_metadata
+  metadata : node_metadata ;
+  store : StoreDriver.id 
 }
 
 type database = {
@@ -67,10 +68,14 @@ let get_node database nid =
       return (database.nodes.[nid])
 
 let put_node database nid metadata = 
-  let fresh = { metadata } in
+  StoreDriver.fresh metadata.node_store >>= fun store ->
+  let fresh = { metadata ; store } in
   let open N_Id_Table.Sugar in
       return (database.nodes.[nid] <- Some fresh)
 
 let delete_node database nid = 
   let open N_Id_Table.Sugar in
       return (database.nodes.[nid] <- None)
+
+let node_store node = 
+  return (node.store)

@@ -48,4 +48,7 @@ module type DEFINITION = sig
   (** The key type of the node (what index is used for accessing it) *)
   val node_metadata : node -> node_metadata Lwt.t 
 
+  (** The store id of the node. *)
+  val node_store : node -> StoreDriver.id Lwt.t
+
 end

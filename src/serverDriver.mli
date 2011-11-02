@@ -16,6 +16,8 @@ class type driver = object
   method delete_node : d_id -> n_id -> (unit,[`NoDatabase]) BatStd.result Lwt.t 
   method get_node : d_id -> n_id -> (node_metadata,[`NoDatabase|`NoNode]) BatStd.result Lwt.t
   method put_node : d_id -> n_id -> node_metadata -> (unit,[`NoDatabase]) BatStd.result Lwt.t 
+  method node_store : d_id -> n_id ->
+    (StoreDriver.driver,[`NoDatabase|`NoNode]) BatStd.result Lwt.t
 end
 
 (** All available driver types *)

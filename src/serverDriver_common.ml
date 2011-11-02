@@ -16,5 +16,6 @@ module type DEFINITION = sig
   val put_node : database -> n_id -> node_metadata -> unit Lwt.t
   val delete_node : database -> n_id -> unit Lwt.t
   val node_metadata : node -> node_metadata Lwt.t 
+  val node_store : node -> StoreDriver.id Lwt.t
 end
 

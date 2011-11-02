@@ -5,8 +5,6 @@ open BatPervasives
 open ServerDriver_common
 open Driver_types  
 
-open StoreDriver
-
 class type driver = object
   method node_count : d_id -> (int,[`NoDatabase]) BatStd.result Lwt.t
   method put_database : d_id -> unit Lwt.t
@@ -17,6 +15,8 @@ class type driver = object
   method delete_node : d_id -> n_id -> (unit,[`NoDatabase]) BatStd.result Lwt.t 
   method get_node : d_id -> n_id -> (node_metadata,[`NoDatabase|`NoNode]) BatStd.result Lwt.t
   method put_node : d_id -> n_id -> node_metadata -> (unit,[`NoDatabase]) BatStd.result Lwt.t
+  method node_store : d_id -> n_id ->
+    (StoreDriver.driver,[`NoDatabase|`NoNode]) BatStd.result Lwt.t
 end
 
 (* This implements the server_driver interface based on the provided 
@@ -45,7 +45,12 @@ module Register = functor(D:DEFINITION) -> struct
     method delete_node  db no = D.get_database db >>= (function
       | None    -> return (Bad `NoDatabase) 
       | Some db -> D.delete_node db no >>= fun () -> return (Ok ())) 
-
+    method node_store   db no = D.get_database db >>= (function
+      | None    -> return (Bad `NoDatabase)
+      | Some db -> D.get_node db no >>= (function
+	  | None      -> return (Bad `NoNode)
+	  | Some node -> D.node_store node >>= (fun id ->
+	    return (Ok (StoreDriver.get id)))))
   end
     
   let driver = (driver_impl :> driver)

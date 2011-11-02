@@ -67,7 +67,7 @@ let get_node db no =
 
 let put_node db no json = 
   let db = database_id db and no = node_id no in
-  let meta = { node_key_type = [ `String ] } in
+  let meta = { node_store = `InMemory } in
   server_driver # put_node db no meta >>= function
     | Bad what -> bad_error what
     | Ok  ()   -> return (200, `Object [ "ok", `Bool true ])

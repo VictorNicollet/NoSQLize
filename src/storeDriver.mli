@@ -3,8 +3,7 @@
 (** Store drivers describe how the data lines of a node are stored 
     and possibly persisted, as well as how they can be queried. *)
 
-(** The types of node store drivers *)
-type t  = [ `InMemory ]
+open Driver_types
 
 (** The identifier of a node store *)
 type id = [ `InMemory of StoreDriver_inMemory.id ]
@@ -16,7 +15,7 @@ class type driver = object
 end
 
 (** Get a fresh identifier in a given domain *)
-val fresh : t -> id Lwt.t
+val fresh : store_type -> id Lwt.t
 
 (** Get a driver using an identifier. *)
 val get : id -> driver

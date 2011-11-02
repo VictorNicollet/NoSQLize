@@ -32,8 +32,11 @@ type datatype =
   | `Option of datatype
   | datatype_raw ]
 
+(** All available node data store types. *)
+type store_type = [ `InMemory ]
+
 (** Metadata about a node in a database on a server. *)
 type node_metadata = 
     {
-      node_key_type : datatype_optraw list 
+      node_store : store_type 
     }

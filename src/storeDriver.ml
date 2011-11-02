@@ -23,7 +23,6 @@ end
 
 module InMemory = Register(StoreDriver_inMemory)
   
-type t  = [ `InMemory ]
 type id = [ `InMemory of StoreDriver_inMemory.id ]
     
 let fresh = function
