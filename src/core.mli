@@ -38,3 +38,7 @@ val put_item : string -> string -> string -> Json.t -> (int * Json.t) Lwt.t
 
 (** Delete an item from a node. *)
 val delete_item : string -> string -> string -> (int * Json.t) Lwt.t
+
+(** The list of changes on a node (since a certain date) *)
+val node_changes : string -> string -> string option -> (int * Json.t) Lwt.t
+

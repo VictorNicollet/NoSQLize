@@ -101,3 +101,16 @@ let delete_item db no id =
   with_node_store db no (fun store ->
     store # put id None >>= fun () ->
     success)
+
+let node_changes db no cidopt = 
+  with_node_store db no (fun store ->
+    let cidopt = BatOption.map change_id cidopt in
+    store # changes cidopt >>= fun list ->
+    let json_lines = BatList.filter_map (fun (cid,item) -> 
+      if Some cid = cidopt then None else Some (
+	`Array [ `String (cid :> string) ; `String item ] 
+      )
+    ) list in
+    return (200, `Object [
+      "changes", `Array json_lines
+    ]))

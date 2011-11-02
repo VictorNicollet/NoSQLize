@@ -43,13 +43,18 @@ let dispatch_db_node_id db no id ~args ~more =
     | `DELETE  -> Core.delete_item db no id 
     | _        -> unsupported
 
+let dispatch_db_node_changes db no ~args ~more = 
+  get_only more (Core.node_changes db no)
+    (try Some (List.assoc "since" args) with _ -> None)
+
 let parse ~uri ~args ~more = 
   let uri_segments = Util.uri_explode uri in
   match uri_segments with 
-    | []               -> dispatch_root                ~args ~more 
-    | [ "!all" ]       -> dispatch_all                 ~args ~more
-    | [ db ]           -> dispatch_db         db       ~args ~more
-    | [ db ; "!all"]   -> dispatch_db_all     db       ~args ~more
-    | [ db ; no ]      -> dispatch_db_node    db no    ~args ~more
-    | [ db ; no ; id ] -> dispatch_db_node_id db no id ~args ~more
-    | _                -> fail 404 "Invalid URI"
+    | []                       -> dispatch_root                     ~args ~more 
+    | [ "!all" ]               -> dispatch_all                      ~args ~more
+    | [ db ]                   -> dispatch_db              db       ~args ~more
+    | [ db ; "!all"]           -> dispatch_db_all          db       ~args ~more
+    | [ db ; no ]              -> dispatch_db_node         db no    ~args ~more
+    | [ db ; no ; "!changes" ] -> dispatch_db_node_changes db no    ~args ~more
+    | [ db ; no ; id ]         -> dispatch_db_node_id      db no id ~args ~more
+    | _                        -> fail 404 "Invalid URI"
