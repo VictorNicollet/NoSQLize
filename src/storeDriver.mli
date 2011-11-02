@@ -5,6 +5,10 @@
 
 (** The identifier of a node store *)
 type id = [ `InMemory of StoreDriver_inMemory.id ]
-    
+
+(** A polymorphic (late-binding) representation of an individual store *)    
+class type driver = object
+end
+
 (** Get a driver using an identifier. *)
-val get : id -> StoreDriver_common.driver
+val get : id -> driver

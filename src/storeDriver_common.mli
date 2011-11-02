@@ -10,13 +10,3 @@ module type DEFINITION = sig
   type id
 end
 
-(** A stpre driver class. Encapsulates all the details concerning a
-    the underlying storage driver module. *)
-class type driver = object
-end
-
-(** Register a store driver. *)
-module Register : functor (D:DEFINITION) -> sig
-  val driver : D.id -> driver
-end
-
