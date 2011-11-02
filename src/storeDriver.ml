@@ -4,8 +4,8 @@ open Lwt
 open StoreDriver_common
   
 class type driver = object
-  val get : string -> Json.t option Lwt.t
-  val put : string -> Json.t option -> unit Lwt.t
+  method get : string -> Json.t option Lwt.t
+  method put : string -> Json.t option -> unit Lwt.t
 end
 
 module Register = functor(D:DEFINITION) -> struct
