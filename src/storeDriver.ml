@@ -4,11 +4,15 @@ open Lwt
 open StoreDriver_common
   
 class type driver = object
+  val get : string -> Json.t option Lwt.t
+  val put : string -> Json.t option -> unit Lwt.t
 end
 
 module Register = functor(D:DEFINITION) -> struct
   
-  let driver_impl id = object
+  let driver_impl tid = object
+    method put id json = D.put tid id json
+    method get id      = D.get tid id 
   end
     
   let driver id = (driver_impl id :> driver)

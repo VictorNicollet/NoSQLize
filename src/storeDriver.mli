@@ -11,6 +11,8 @@ type id = [ `InMemory of StoreDriver_inMemory.id ]
 
 (** A polymorphic (late-binding) representation of an individual store *)    
 class type driver = object
+  val get : string -> Json.t option Lwt.t
+  val put : string -> Json.t option -> unit Lwt.t
 end
 
 (** Get a fresh identifier in a given domain *)
