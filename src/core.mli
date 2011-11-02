@@ -29,3 +29,12 @@ val put_node : string -> string -> Json.t -> (int * Json.t) Lwt.t
 
 (** Delete a node. *)
 val delete_node : string -> string -> (int * Json.t) Lwt.t
+
+(** Get an item from a node. *)
+val get_item : string -> string -> string -> (int * Json.t) Lwt.t
+
+(** Put an item in a node. *)
+val put_item : string -> string -> string -> Json.t -> (int * Json.t) Lwt.t
+
+(** Delete an item from a node. *)
+val delete_item : string -> string -> string -> (int * Json.t) Lwt.t
