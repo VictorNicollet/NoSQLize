@@ -5,6 +5,7 @@ open Driver_types
 open BatPervasives
 
 module type DEFINITION = sig
+  type id 
 end
 
 class type driver = object
@@ -12,11 +13,9 @@ end
 
 module Register = functor(D:DEFINITION) -> struct
   
-  let driver_impl = object
+  let driver_impl id = object
   end
     
-  let driver = (driver_impl :> driver)
+  let driver id = (driver_impl id :> driver)
 
 end
-
-type t = [ `InMemory ]

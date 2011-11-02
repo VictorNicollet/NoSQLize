@@ -7,7 +7,7 @@ open Driver_types
 
 (** The store driver interface. *)
 module type DEFINITION = sig
-
+  type id
 end
 
 (** A stpre driver class. Encapsulates all the details concerning a
@@ -17,8 +17,6 @@ end
 
 (** Register a store driver. *)
 module Register : functor (D:DEFINITION) -> sig
-  val driver : driver
+  val driver : D.id -> driver
 end
 
-(** All available driver types *)
-type t = [ `InMemory ]

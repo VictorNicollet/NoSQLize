@@ -5,8 +5,11 @@
 (** Store drivers. *)
 module Store : sig
 
+  (** The identifier of a node store *)
+  type id = [ `InMemory of Driver_store_inMemory.id ]
+
   (** Get a driver using an identifier. *)
-  val get : Driver_store.t -> Driver_store.driver
+  val get : id -> Driver_store.driver
 
 end
 

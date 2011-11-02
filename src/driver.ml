@@ -4,8 +4,12 @@ module Store = struct
 
   open Driver_store
 
+  module InMemory = Register(Driver_store_inMemory)
+
+  type id = [ `InMemory of Driver_store_inMemory.id ]
+
   let get = function
-    | `InMemory -> assert false 
+    | `InMemory id -> InMemory.driver id
 
 end
 
