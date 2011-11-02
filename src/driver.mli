@@ -2,6 +2,14 @@
 
 (** This module registers and exports all available drivers. *)
 
+(** Store drivers. *)
+module Store : sig
+
+  (** Get a driver using an identifier. *)
+  val get : Driver_store.t -> Driver_store.driver
+
+end
+
 (** Server drivers. *)
 module Server : sig
 

@@ -1,5 +1,14 @@
 (* NoSQLize - a public domain NoSQL storage and computation engine. *)
 
+module Store = struct
+
+  open Driver_store
+
+  let get = function
+    | `InMemory -> assert false 
+
+end
+
 module Server = struct
 
   open Driver_server
