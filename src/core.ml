@@ -14,7 +14,7 @@ let bad_error = function
 let version = "0.1"
 
 let server_driver_name = `InMemory
-let server_driver = Driver.Server.get server_driver_name
+let server_driver = ServerDriver.get server_driver_name
  
 let status () = 
   server_driver # database_count >>= fun db_count -> 
