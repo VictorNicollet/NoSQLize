@@ -8,6 +8,9 @@ let database_id = identity
 type n_id = string
 let node_id = identity
 
+type c_id = string
+let change_id = identity
+
 type datatype_raw = 
     [ `String
     | `Boolean

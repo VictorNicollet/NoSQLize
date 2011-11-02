@@ -14,6 +14,12 @@ type n_id = private string
 (** Constructing a node identifier from a string. *)
 val node_id : string -> n_id
 
+(** A change identifier. A phantom string to avoid type errors. *)
+type c_id = private string
+
+(** Constructing a change identifier from a string. *)
+val change_id : string -> c_id
+
 (** Raw data types *)
 type datatype_raw = 
     [ `String
