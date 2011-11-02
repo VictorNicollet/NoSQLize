@@ -33,4 +33,8 @@ let delegate f x =
   let ()     = Event.sync (Event.send channel act) in
   Event.sync (Event.receive back)
 
+let throw f x = 
+  let act () = f x in
+  Event.sync (Event.send channel act)
+
 let workers () = ! worker_count

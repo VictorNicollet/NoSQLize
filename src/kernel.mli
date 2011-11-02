@@ -10,5 +10,9 @@
     thread. *)
 val delegate : ('a -> 'b Lwt.t) -> 'a -> 'b 
 
+(** Throw work at the worker thread. [throw f x] will entirely execute [f x]
+    in the worker thread, and no result will be returned. *)
+val throw : ('a -> unit Lwt.t) -> 'a -> unit 
+
 (** The number of delegated tasks currently being executed. *)
 val workers : unit -> int

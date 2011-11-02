@@ -2,7 +2,7 @@
 
 open Lwt
 
-let dispatch req =
+let dispatch req outchan =
 
   let assoc_to_json list = 
     (* We are actually hacking around the HTTP library's inability to handle
@@ -36,8 +36,7 @@ let dispatch req =
   result >>= fun (status,json) ->
   
   return 
-    (fun outchan -> 
-      Http_daemon.respond 
+    (Http_daemon.respond 
 	~code:(`Code status)
 	~body:(Json.string_of_json json)
 	~headers:["Content-Type","application/json"]
@@ -46,7 +45,7 @@ let dispatch req =
 (* All the relevant work, except for sending out the response, should happen
    in the pre-emptive Lwt worker thread. *)
 let callback req outchan = 
-  (Kernel.delegate dispatch req) outchan 
+  Kernel.throw (dispatch req) outchan
 
 let port = 7456
   
@@ -54,7 +53,7 @@ let spec =
   Http_types.({
     Http_daemon.default_spec with
       callback ;
-      mode     = `Thread ;
+      mode     = `Single ;
       timeout  = None ;
       port     ;
   })
