@@ -6,7 +6,7 @@
 val to_string : Json.t -> string option
 
 (** Return the value as an integer. Non-integer values are returned as None. *)
-val to_integer : Json.t -> int option
+val to_int : Json.t -> int option
 
 (** Return the value as a floating point number. Integer values are transformed into
     floating-point values and returned. Other values are returned as None. *)
